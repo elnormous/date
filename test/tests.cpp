@@ -10,10 +10,18 @@ TEST_CASE("January 1, 2022", "[parsing]")
     REQUIRE(result.day == 1);
 }
 
+TEST_CASE("February 2, 2023", "[parsing]")
+{
+    const auto result = date::parse("2023-02-02");
+    REQUIRE(result.year == 2023);
+    REQUIRE(result.month == 2);
+    REQUIRE(result.day == 2);
+}
+
 TEST_CASE("Parse year", "[parsing]")
 {
     const std::string s = "2023";
-    const auto [i, result] = date::parseYear(s.begin(), s.end());
+    const auto [i, result] = date::parseNumbers(s.begin(), s.end(), 4);
     REQUIRE(i == s.end());
     REQUIRE(result == 2023);
 }
