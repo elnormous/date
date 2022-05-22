@@ -17,6 +17,9 @@ namespace date
         std::size_t year;
         std::size_t month;
         std::size_t day;
+        std::size_t hour;
+        std::size_t minute;
+        std::size_t second;
     };
 
     template <class I>
@@ -37,11 +40,11 @@ namespace date
     {
         const auto [yearIterator, year] = parseNumbers(s.begin(), s.end(), 4);
         if (yearIterator == s.end() || *yearIterator != '-')
-            throw ParseError{"Invalid date"};
+            throw ParseError{"Expected a dash"};
 
         const auto [monthIterator, month] = parseNumbers(yearIterator + 1, s.end(), 2);
         if (monthIterator == s.end() || *monthIterator != '-')
-            throw ParseError{"Invalid date"};
+            throw ParseError{"Expected a dash"};
 
         const auto [dayIterator, day] = parseNumbers(monthIterator + 1, s.end(), 2);
 
@@ -49,6 +52,29 @@ namespace date
         result.year = year;
         result.month = month;
         result.day = day;
+
+        if (dayIterator != s.end())
+        {
+            if (*dayIterator != ' ')
+                throw ParseError{"Expected a space"};
+
+            const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, s.end(), 2);
+            if (hourIterator == s.end() || *hourIterator != ':')
+                throw ParseError{"Expected a dash"};
+
+            const auto [minuteIterator, minute] = parseNumbers(hourIterator + 1, s.end(), 2);
+            if (minuteIterator == s.end() || *minuteIterator != ':')
+                throw ParseError{"Expected a dash"};
+
+            const auto [secondIterator, second] = parseNumbers(minuteIterator + 1, s.end(), 2);
+
+            if (secondIterator != s.end())
+                throw ParseError{"Invalid date"};
+
+            result.hour = hour;
+            result.minute = minute;
+            result.second = second;
+        }
 
         return result;
     }
