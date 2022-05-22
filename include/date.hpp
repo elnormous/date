@@ -36,39 +36,40 @@ namespace date
         return {iterator, result};
     }
 
-    inline Date parse(std::string_view s)
+    template <class I>
+    inline Date parse(const I begin, const I end)
     {
-        const auto [yearIterator, year] = parseNumbers(s.begin(), s.end(), 4);
-        if (yearIterator == s.end() || *yearIterator != '-')
+        const auto [yearIterator, year] = parseNumbers(begin, end, 4);
+        if (yearIterator == end || *yearIterator != '-')
             throw ParseError{"Expected a dash"};
 
-        const auto [monthIterator, month] = parseNumbers(yearIterator + 1, s.end(), 2);
-        if (monthIterator == s.end() || *monthIterator != '-')
+        const auto [monthIterator, month] = parseNumbers(yearIterator + 1, end, 2);
+        if (monthIterator == end || *monthIterator != '-')
             throw ParseError{"Expected a dash"};
 
-        const auto [dayIterator, day] = parseNumbers(monthIterator + 1, s.end(), 2);
+        const auto [dayIterator, day] = parseNumbers(monthIterator + 1, end, 2);
 
         Date result;
         result.year = year;
         result.month = month;
         result.day = day;
 
-        if (dayIterator != s.end())
+        if (dayIterator != end)
         {
             if (*dayIterator != ' ')
                 throw ParseError{"Expected a space"};
 
-            const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, s.end(), 2);
-            if (hourIterator == s.end() || *hourIterator != ':')
+            const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, end, 2);
+            if (hourIterator == end || *hourIterator != ':')
                 throw ParseError{"Expected a dash"};
 
-            const auto [minuteIterator, minute] = parseNumbers(hourIterator + 1, s.end(), 2);
-            if (minuteIterator == s.end() || *minuteIterator != ':')
+            const auto [minuteIterator, minute] = parseNumbers(hourIterator + 1, end, 2);
+            if (minuteIterator == end || *minuteIterator != ':')
                 throw ParseError{"Expected a dash"};
 
-            const auto [secondIterator, second] = parseNumbers(minuteIterator + 1, s.end(), 2);
+            const auto [secondIterator, second] = parseNumbers(minuteIterator + 1, end, 2);
 
-            if (secondIterator != s.end())
+            if (secondIterator != end)
                 throw ParseError{"Invalid date"};
 
             result.hour = hour;
@@ -77,6 +78,18 @@ namespace date
         }
 
         return result;
+    }
+
+    template <class T>
+    inline Date parse(const T& s)
+    {
+        using std::begin, std::end;
+        return parse(begin(s), end(s));
+    }
+
+    inline Date parse(const char* s)
+    {
+        return parse(s, s + std::strlen(s));
     }
 }
 
