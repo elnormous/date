@@ -23,6 +23,13 @@ namespace date
         std::size_t second;
     };
 
+    inline std::size_t charToNumber(const char c)
+    {
+        return (c >= '0' && c <= '9') ?
+            static_cast<std::size_t>(c - '0') :
+            throw ParseError{"Invalid number"};
+    }
+
     template <class I>
     std::pair<I, std::size_t> parseNumbers(const I begin, const I end, const std::size_t count)
     {
@@ -30,9 +37,9 @@ namespace date
         I iterator = begin;
 
         for (std::size_t i = 0; i < count; ++i, ++iterator)
-            result = result * 10 + ((iterator != end && *iterator >= '0' && *iterator <= '9') ?
-                static_cast<std::size_t>((*iterator - '0')) :
-                throw ParseError{"Invalid number"});
+            result = result * 10 + (iterator != end ?
+                                    charToNumber(static_cast<char>(*iterator)) :
+                                    throw ParseError{"Invalid number"});
 
         return {iterator, result};
     }
