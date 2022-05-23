@@ -23,9 +23,14 @@ namespace date
         std::size_t second;
     };
 
+    inline bool isNumber(const char c) noexcept
+    {
+        return c >= '0' && c <= '9';
+    }
+
     inline std::size_t charToNumber(const char c)
     {
-        return (c >= '0' && c <= '9') ?
+        return isNumber(c) ?
             static_cast<std::size_t>(c - '0') :
             throw ParseError{"Invalid number"};
     }
