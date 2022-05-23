@@ -28,7 +28,7 @@ TEST_CASE("Parse number", "[parsing]")
 
 TEST_CASE("Parse time", "[parsing]")
 {
-    const std::string s = "2023-02-02 10:11:12";
+    const std::string s = "2023-02-02T10:11:12";
     const auto result = date::parse(s);
     REQUIRE(result.year == 2023);
     REQUIRE(result.month == 2);

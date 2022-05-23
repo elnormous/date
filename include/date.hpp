@@ -69,7 +69,7 @@ namespace date
 
         if (dayIterator != end)
         {
-            if (*dayIterator != ' ')
+            if (*dayIterator != 'T')
                 throw ParseError{"Expected a space"};
 
             const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, end, 2);
