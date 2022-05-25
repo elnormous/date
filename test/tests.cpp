@@ -37,3 +37,9 @@ TEST_CASE("Parse time", "[parsing]")
     REQUIRE(result.minute == 11);
     REQUIRE(result.second == 12);
 }
+
+TEST_CASE("Invalid month", "[parsing]")
+{
+    const std::string s = "2023-13-02T10:11:12";
+    REQUIRE_THROWS_AS(date::parse(s), date::ParseError);
+}
