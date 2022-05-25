@@ -57,6 +57,10 @@ namespace date
             throw ParseError{"Expected a dash"};
 
         const auto [monthIterator, month] = parseNumbers(yearIterator + 1, end, 2);
+        
+        if (month < 1 || month > 12)
+            throw ParseError{"Invalid month"};
+        
         if (monthIterator == end || *monthIterator != '-')
             throw ParseError{"Expected a dash"};
 
