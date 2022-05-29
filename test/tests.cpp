@@ -26,7 +26,7 @@ TEST_CASE("Parse number", "[parsing]")
     REQUIRE(result == 2023);
 }
 
-TEST_CASE("Parse time", "[parsing]")
+TEST_CASE("Parse time with separators", "[parsing]")
 {
     const std::string s = "2023-02-02T10:11:12";
     const auto result = date::parse(s);
@@ -42,4 +42,16 @@ TEST_CASE("Invalid month", "[parsing]")
 {
     const std::string s = "2023-13-02T10:11:12";
     REQUIRE_THROWS_AS(date::parse(s), date::ParseError);
+}
+
+TEST_CASE("Parse time without separators", "[parsing]")
+{
+    const std::string s = "20230202T101112";
+    const auto result = date::parse(s);
+    REQUIRE(result.year == 2023);
+    REQUIRE(result.month == 2);
+    REQUIRE(result.day == 2);
+    REQUIRE(result.hour == 10);
+    REQUIRE(result.minute == 11);
+    REQUIRE(result.second == 12);
 }

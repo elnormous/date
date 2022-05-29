@@ -53,18 +53,23 @@ namespace date
     inline Date parse(const I begin, const I end)
     {
         const auto [yearIterator, year] = parseNumbers(begin, end, 4);
-        if (yearIterator == end || *yearIterator != '-')
-            throw ParseError{"Expected a dash"};
+        if (yearIterator == end)
+            throw ParseError{"Unexpected end"};
 
-        const auto [monthIterator, month] = parseNumbers(yearIterator + 1, end, 2);
+        const bool separators = *yearIterator == '-';
+
+        const auto [monthIterator, month] = parseNumbers(yearIterator + (separators ? 1 : 0), end, 2);
         
         if (month < 1 || month > 12)
             throw ParseError{"Invalid month"};
-        
-        if (monthIterator == end || *monthIterator != '-')
+
+        if (monthIterator == end)
+            throw ParseError{"Unexpected end"};
+
+        if (separators && *monthIterator != '-')
             throw ParseError{"Expected a dash"};
 
-        const auto [dayIterator, day] = parseNumbers(monthIterator + 1, end, 2);
+        const auto [dayIterator, day] = parseNumbers(monthIterator + (separators ? 1 : 0), end, 2);
 
         Date result;
         result.year = year;
@@ -77,14 +82,20 @@ namespace date
                 throw ParseError{"Expected a space"};
 
             const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, end, 2);
-            if (hourIterator == end || *hourIterator != ':')
+            if (hourIterator == end)
+                throw ParseError{"Unexpected end"};
+
+            if (separators && *hourIterator != ':')
                 throw ParseError{"Expected a colon"};
 
-            const auto [minuteIterator, minute] = parseNumbers(hourIterator + 1, end, 2);
-            if (minuteIterator == end || *minuteIterator != ':')
+            const auto [minuteIterator, minute] = parseNumbers(hourIterator + (separators ? 1 : 0), end, 2);
+            if (minuteIterator == end)
+                throw ParseError{"Unexpected end"};
+
+            if (separators && *minuteIterator != ':')
                 throw ParseError{"Expected a colon"};
 
-            const auto [secondIterator, second] = parseNumbers(minuteIterator + 1, end, 2);
+            const auto [secondIterator, second] = parseNumbers(minuteIterator + (separators ? 1 : 0), end, 2);
 
             if (secondIterator != end)
                 throw ParseError{"Invalid date"};
