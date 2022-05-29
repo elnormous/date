@@ -78,11 +78,11 @@ namespace date
 
             const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, end, 2);
             if (hourIterator == end || *hourIterator != ':')
-                throw ParseError{"Expected a dash"};
+                throw ParseError{"Expected a colon"};
 
             const auto [minuteIterator, minute] = parseNumbers(hourIterator + 1, end, 2);
             if (minuteIterator == end || *minuteIterator != ':')
-                throw ParseError{"Expected a dash"};
+                throw ParseError{"Expected a colon"};
 
             const auto [secondIterator, second] = parseNumbers(minuteIterator + 1, end, 2);
 
