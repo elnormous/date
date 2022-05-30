@@ -28,6 +28,11 @@ namespace date
         return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
 
+    inline bool is30DayMonth(std::size_t month) noexcept
+    {
+        return month == 4 || month == 6 || month == 9 || month == 11;
+    }
+
     inline bool isNumber(const char c) noexcept
     {
         return c >= '0' && c <= '9';
@@ -84,7 +89,7 @@ namespace date
             if (day > (isLeapYear(year) ? 29 : 28))
                 throw ParseError{"Invalid day"};
         }
-        else if (month == 4 || month == 6 || month == 9 || month == 11)
+        else if (is30DayMonth(month))
         {
             if (day > 30)
                 throw ParseError{"Invalid day"};
