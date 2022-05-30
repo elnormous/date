@@ -33,6 +33,12 @@ namespace date
         return month == 4 || month == 6 || month == 9 || month == 11;
     }
 
+    inline std::size_t getDaysInMonth(std::size_t month, std::size_t year) noexcept
+    {
+        return month == 2 ? (isLeapYear(year) ? 29 : 28) :
+            is30DayMonth(month) ? 30 : 31;
+    }
+
     inline bool isNumber(const char c) noexcept
     {
         return c >= '0' && c <= '9';
@@ -81,20 +87,7 @@ namespace date
 
         const auto [dayIterator, day] = parseNumbers(monthIterator + (separators ? 1 : 0), end, 2);
 
-        if (day < 1)
-            ParseError{"Invalid day"};
-
-        if (month == 2)
-        {
-            if (day > (isLeapYear(year) ? 29 : 28))
-                throw ParseError{"Invalid day"};
-        }
-        else if (is30DayMonth(month))
-        {
-            if (day > 30)
-                throw ParseError{"Invalid day"};
-        }
-        else if (day > 31)
+        if (day < 1 || day > getDaysInMonth(month, year))
             throw ParseError{"Invalid day"};
 
         Date result;
