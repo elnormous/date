@@ -23,6 +23,11 @@ namespace date
         std::size_t second;
     };
 
+    inline bool isLeapYear(std::size_t year) noexcept
+    {
+        return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    }
+
     inline bool isNumber(const char c) noexcept
     {
         return c >= '0' && c <= '9';
@@ -70,6 +75,22 @@ namespace date
             throw ParseError{"Expected a dash"};
 
         const auto [dayIterator, day] = parseNumbers(monthIterator + (separators ? 1 : 0), end, 2);
+
+        if (day < 1)
+            ParseError{"Invalid day"};
+
+        if (month == 2)
+        {
+            if (day > (isLeapYear(year) ? 29 : 28))
+                throw ParseError{"Invalid day"};
+        }
+        else if (month == 4 || month == 6 || month == 9 || month == 11)
+        {
+            if (day > 30)
+                throw ParseError{"Invalid day"};
+        }
+        else if (day > 31)
+            throw ParseError{"Invalid day"};
 
         Date result;
         result.year = year;

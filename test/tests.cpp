@@ -18,6 +18,18 @@ TEST_CASE("February 2, 2023", "[parsing]")
     REQUIRE(result.day == 2);
 }
 
+TEST_CASE("February 29 non-leap year", "[parsing]")
+{
+    const std::string s = "2023-02-29";
+    REQUIRE_THROWS_AS(date::parse(s), date::ParseError);
+}
+
+TEST_CASE("April 31", "[parsing]")
+{
+    const std::string s = "2023-04-31";
+    REQUIRE_THROWS_AS(date::parse(s), date::ParseError);
+}
+
 TEST_CASE("Parse number", "[parsing]")
 {
     const std::string s = "2023";
