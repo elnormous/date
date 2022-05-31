@@ -18,9 +18,10 @@ namespace date
         std::size_t year;
         std::size_t month;
         std::size_t day;
-        std::size_t hour;
-        std::size_t minute;
-        std::size_t second;
+        std::size_t hour = 0;
+        std::size_t minute = 0;
+        std::size_t second = 0;
+        std::size_t timeZone = 0;
     };
 
     inline bool isLeapYear(std::size_t year) noexcept
@@ -116,12 +117,17 @@ namespace date
 
             const auto [secondIterator, second] = parseNumbers(minuteIterator + (separators ? 1 : 0), end, 2);
 
-            if (secondIterator != end)
-                throw ParseError{"Invalid date"};
-
             result.hour = hour;
             result.minute = minute;
             result.second = second;
+            
+            if (secondIterator != end)
+            {
+                if (*secondIterator == 'Z')
+                    result.timeZone = 0;
+                else
+                    throw ParseError{"Invalid timezone"};
+            }
         }
 
         return result;

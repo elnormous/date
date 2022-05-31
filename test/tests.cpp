@@ -109,3 +109,16 @@ TEST_CASE("Parse time without separators", "[parsing]")
     REQUIRE(result.minute == 11);
     REQUIRE(result.second == 12);
 }
+
+TEST_CASE("UTC time zone", "[parsing]")
+{
+    const std::string s = "20230202T101112Z";
+    const auto result = date::parse(s);
+    REQUIRE(result.year == 2023);
+    REQUIRE(result.month == 2);
+    REQUIRE(result.day == 2);
+    REQUIRE(result.hour == 10);
+    REQUIRE(result.minute == 11);
+    REQUIRE(result.second == 12);
+    REQUIRE(result.timeZone == 0);
+}
