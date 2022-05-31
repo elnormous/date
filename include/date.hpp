@@ -15,26 +15,26 @@ namespace date
 
     struct Date final
     {
-        std::size_t year;
-        std::size_t month;
-        std::size_t day;
-        std::size_t hour = 0;
-        std::size_t minute = 0;
-        std::size_t second = 0;
-        std::size_t timeZone = 0;
+        std::uint32_t year;
+        std::uint32_t month;
+        std::uint32_t day;
+        std::uint32_t hour = 0;
+        std::uint32_t minute = 0;
+        std::uint32_t second = 0;
+        std::uint32_t timeZone = 0;
     };
 
-    inline bool isLeapYear(std::size_t year) noexcept
+    inline bool isLeapYear(std::uint32_t year) noexcept
     {
         return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
 
-    inline bool is30DayMonth(std::size_t month) noexcept
+    inline bool is30DayMonth(std::uint32_t month) noexcept
     {
         return month == 4 || month == 6 || month == 9 || month == 11;
     }
 
-    inline std::size_t getDaysInMonth(std::size_t month, std::size_t year) noexcept
+    inline std::uint32_t getDaysInMonth(std::uint32_t month, std::uint32_t year) noexcept
     {
         return month == 2 ? (isLeapYear(year) ? 29 : 28) :
             is30DayMonth(month) ? 30 : 31;
@@ -45,21 +45,21 @@ namespace date
         return c >= '0' && c <= '9';
     }
 
-    inline std::size_t charToNumber(const char c)
+    inline std::uint32_t charToNumber(const char c)
     {
         return isNumber(c) ?
-            static_cast<std::size_t>(c - '0') :
+            static_cast<std::uint32_t>(c - '0') :
             throw ParseError{"Invalid number"};
     }
 
     template <class I>
-    std::pair<I, std::size_t> parseNumbers(const I begin, const I end, const std::size_t count)
+    std::pair<I, std::uint32_t> parseNumbers(const I begin, const I end, const std::size_t count)
     {
-        std::size_t result = 0;
+        std::uint32_t result = 0;
         I iterator = begin;
 
         for (std::size_t i = 0; i < count; ++i, ++iterator)
-            result = result * 10 + (iterator != end ?
+            result = result * 10U + (iterator != end ?
                                     charToNumber(static_cast<char>(*iterator)) :
                                     throw ParseError{"Invalid number"});
 
