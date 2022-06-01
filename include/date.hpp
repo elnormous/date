@@ -21,6 +21,7 @@ namespace date
         std::uint32_t hour = 0;
         std::uint32_t minute = 0;
         std::uint32_t second = 0;
+        std::uint32_t secondFraction = 0;
         std::uint32_t timeZone = 0;
     };
 
@@ -53,15 +54,20 @@ namespace date
     }
 
     template <class I>
-    std::pair<I, std::uint32_t> parseNumbers(const I begin, const I end, const std::size_t count)
+    std::pair<I, std::uint32_t> parseNumber(const I begin, const I end, const std::size_t digits = 0)
     {
         std::uint32_t result = 0;
         I iterator = begin;
 
-        for (std::size_t i = 0; i < count; ++i, ++iterator)
+        for (std::size_t i = 0; digits == 0 || i < digits; ++i, ++iterator)
+        {
+            if (digits == 0 && (iterator == end || !isNumber(*iterator)))
+                break;
+
             result = result * 10U + (iterator != end ?
-                                    charToNumber(static_cast<char>(*iterator)) :
-                                    throw ParseError{"Invalid number"});
+                                     charToNumber(static_cast<char>(*iterator)) :
+                                     throw ParseError{"Invalid number"});
+        }
 
         return {iterator, result};
     }
@@ -69,13 +75,13 @@ namespace date
     template <class I>
     inline Date parse(const I begin, const I end)
     {
-        const auto [yearIterator, year] = parseNumbers(begin, end, 4);
+        const auto [yearIterator, year] = parseNumber(begin, end, 4);
         if (yearIterator == end)
             throw ParseError{"Unexpected end"};
 
         const bool separators = *yearIterator == '-';
 
-        const auto [monthIterator, month] = parseNumbers(yearIterator + (separators ? 1 : 0), end, 2);
+        const auto [monthIterator, month] = parseNumber(yearIterator + (separators ? 1 : 0), end, 2);
         
         if (month < 1 || month > 12)
             throw ParseError{"Invalid month"};
@@ -86,7 +92,7 @@ namespace date
         if (separators && *monthIterator != '-')
             throw ParseError{"Expected a dash"};
 
-        const auto [dayIterator, day] = parseNumbers(monthIterator + (separators ? 1 : 0), end, 2);
+        const auto [dayIterator, day] = parseNumber(monthIterator + (separators ? 1 : 0), end, 2);
 
         if (day < 1 || day > getDaysInMonth(month, year))
             throw ParseError{"Invalid day"};
@@ -101,21 +107,21 @@ namespace date
             if (*dayIterator != 'T')
                 throw ParseError{"Expected a space"};
 
-            const auto [hourIterator, hour] = parseNumbers(dayIterator + 1, end, 2);
+            const auto [hourIterator, hour] = parseNumber(dayIterator + 1, end, 2);
             if (hourIterator == end)
                 throw ParseError{"Unexpected end"};
 
             if (separators && *hourIterator != ':')
                 throw ParseError{"Expected a colon"};
 
-            const auto [minuteIterator, minute] = parseNumbers(hourIterator + (separators ? 1 : 0), end, 2);
+            const auto [minuteIterator, minute] = parseNumber(hourIterator + (separators ? 1 : 0), end, 2);
             if (minuteIterator == end)
                 throw ParseError{"Unexpected end"};
 
             if (separators && *minuteIterator != ':')
                 throw ParseError{"Expected a colon"};
 
-            const auto [secondIterator, second] = parseNumbers(minuteIterator + (separators ? 1 : 0), end, 2);
+            const auto [secondIterator, second] = parseNumber(minuteIterator + (separators ? 1 : 0), end, 2);
 
             result.hour = hour;
             result.minute = minute;
