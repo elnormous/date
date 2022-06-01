@@ -15,12 +15,12 @@ namespace date
 
     struct Date final
     {
-        std::uint32_t year;
-        std::uint32_t month;
-        std::uint32_t day;
-        std::uint32_t hour = 0;
-        std::uint32_t minute = 0;
-        std::uint32_t second = 0;
+        std::uint16_t year;
+        std::uint8_t month;
+        std::uint8_t day;
+        std::uint8_t hour = 0;
+        std::uint8_t minute = 0;
+        std::uint8_t second = 0;
         std::uint32_t secondFraction = 0;
         std::uint32_t timeZone = 0;
     };
@@ -46,17 +46,18 @@ namespace date
         return c >= '0' && c <= '9';
     }
 
-    inline std::uint32_t charToNumber(const char c)
+    template <class R>
+    inline R charToNumber(const char c)
     {
         return isNumber(c) ?
-            static_cast<std::uint32_t>(c - '0') :
+            static_cast<R>(c - '0') :
             throw ParseError{"Invalid number"};
     }
 
-    template <class I>
-    std::pair<I, std::uint32_t> parseNumber(const I begin, const I end, const std::size_t digits = 0)
+    template <class R, class I>
+    std::pair<I, R> parseNumber(const I begin, const I end, const std::size_t digits = 0)
     {
-        std::uint32_t result = 0;
+        R result = 0;
         I iterator = begin;
 
         for (std::size_t i = 0; digits == 0 || i < digits; ++i, ++iterator)
@@ -64,9 +65,9 @@ namespace date
             if (digits == 0 && (iterator == end || !isNumber(*iterator)))
                 break;
 
-            result = result * 10U + (iterator != end ?
-                                     charToNumber(static_cast<char>(*iterator)) :
-                                     throw ParseError{"Invalid number"});
+            result = result * R(10U) + (iterator != end ?
+                                        charToNumber<R>(static_cast<char>(*iterator)) :
+                                        throw ParseError{"Invalid number"});
         }
 
         return {iterator, result};
@@ -75,13 +76,13 @@ namespace date
     template <class I>
     inline Date parse(const I begin, const I end)
     {
-        const auto [yearIterator, year] = parseNumber(begin, end, 4);
+        const auto [yearIterator, year] = parseNumber<std::uint16_t>(begin, end, 4);
         if (yearIterator == end)
             throw ParseError{"Unexpected end"};
 
         const bool separators = *yearIterator == '-';
 
-        const auto [monthIterator, month] = parseNumber(yearIterator + (separators ? 1 : 0), end, 2);
+        const auto [monthIterator, month] = parseNumber<std::uint8_t>(yearIterator + (separators ? 1 : 0), end, 2);
         
         if (month < 1 || month > 12)
             throw ParseError{"Invalid month"};
@@ -92,7 +93,7 @@ namespace date
         if (separators && *monthIterator != '-')
             throw ParseError{"Expected a dash"};
 
-        const auto [dayIterator, day] = parseNumber(monthIterator + (separators ? 1 : 0), end, 2);
+        const auto [dayIterator, day] = parseNumber<std::uint8_t>(monthIterator + (separators ? 1 : 0), end, 2);
 
         if (day < 1 || day > getDaysInMonth(month, year))
             throw ParseError{"Invalid day"};
@@ -107,21 +108,21 @@ namespace date
             if (*dayIterator != 'T')
                 throw ParseError{"Expected a space"};
 
-            const auto [hourIterator, hour] = parseNumber(dayIterator + 1, end, 2);
+            const auto [hourIterator, hour] = parseNumber<std::uint8_t>(dayIterator + 1, end, 2);
             if (hourIterator == end)
                 throw ParseError{"Unexpected end"};
 
             if (separators && *hourIterator != ':')
                 throw ParseError{"Expected a colon"};
 
-            const auto [minuteIterator, minute] = parseNumber(hourIterator + (separators ? 1 : 0), end, 2);
+            const auto [minuteIterator, minute] = parseNumber<std::uint8_t>(hourIterator + (separators ? 1 : 0), end, 2);
             if (minuteIterator == end)
                 throw ParseError{"Unexpected end"};
 
             if (separators && *minuteIterator != ':')
                 throw ParseError{"Expected a colon"};
 
-            const auto [secondIterator, second] = parseNumber(minuteIterator + (separators ? 1 : 0), end, 2);
+            const auto [secondIterator, second] = parseNumber<std::uint8_t>(minuteIterator + (separators ? 1 : 0), end, 2);
 
             result.hour = hour;
             result.minute = minute;

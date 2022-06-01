@@ -75,7 +75,7 @@ TEST_CASE("April 31", "[parsing]")
 TEST_CASE("Parse number with 4 digits", "[parsing]")
 {
     const std::string s = "2023";
-    const auto [i, result] = date::parseNumber(s.begin(), s.end(), 4);
+    const auto [i, result] = date::parseNumber<std::uint32_t>(s.begin(), s.end(), 4);
     REQUIRE(i == s.end());
     REQUIRE(result == 2023);
 }
@@ -83,7 +83,7 @@ TEST_CASE("Parse number with 4 digits", "[parsing]")
 TEST_CASE("Parse number with unknown digits", "[parsing]")
 {
     const std::string s = "123";
-    const auto [i, result] = date::parseNumber(s.begin(), s.end());
+    const auto [i, result] = date::parseNumber<std::uint32_t>(s.begin(), s.end());
     REQUIRE(i == s.end());
     REQUIRE(result == 123);
 }
