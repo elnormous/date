@@ -13,29 +13,36 @@ namespace date
         using std::runtime_error::runtime_error;
     };
 
+    using Year = std::uint16_t;
+    using Month = std::uint8_t;
+    using Day = std::uint8_t;
+    using Hour = std::uint8_t;
+    using Minute = std::uint8_t;
+    using Second = std::uint8_t;
+
     struct Date final
     {
-        std::uint16_t year;
-        std::uint8_t month;
-        std::uint8_t day;
-        std::uint8_t hour = 0;
-        std::uint8_t minute = 0;
-        std::uint8_t second = 0;
+        Year year;
+        Month month;
+        Day day;
+        Hour hour = 0;
+        Minute minute = 0;
+        Second second = 0;
         std::uint32_t secondFraction = 0;
         std::uint32_t timeZone = 0;
     };
 
-    inline bool isLeapYear(std::uint32_t year) noexcept
+    inline bool isLeapYear(const Year year) noexcept
     {
         return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
 
-    inline bool is30DayMonth(std::uint32_t month) noexcept
+    inline bool is30DayMonth(const Month month) noexcept
     {
         return month == 4 || month == 6 || month == 9 || month == 11;
     }
 
-    inline std::uint32_t getDaysInMonth(std::uint32_t month, std::uint32_t year) noexcept
+    inline std::uint32_t getDaysInMonth(const Month month, const Year year) noexcept
     {
         return month == 2 ? (isLeapYear(year) ? 29 : 28) :
             is30DayMonth(month) ? 30 : 31;
