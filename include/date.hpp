@@ -69,7 +69,7 @@ namespace date
 
         for (std::size_t i = 0; digits == 0 || i < digits; ++i, ++iterator)
         {
-            if (digits == 0 && (iterator == end || !isDigit(*iterator)))
+            if (digits == 0 && (iterator == end || !isDigit(static_cast<char>(*iterator))))
                 break;
 
             result = result * R(10U) + (iterator != end ?
