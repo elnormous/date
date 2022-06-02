@@ -41,7 +41,7 @@ namespace date
             is30DayMonth(month) ? 30 : 31;
     }
 
-    inline bool isNumber(const char c) noexcept
+    inline bool isDigit(const char c) noexcept
     {
         return c >= '0' && c <= '9';
     }
@@ -49,7 +49,7 @@ namespace date
     template <class R>
     inline R charToNumber(const char c)
     {
-        return isNumber(c) ?
+        return isDigit(c) ?
             static_cast<R>(c - '0') :
             throw ParseError{"Invalid number"};
     }
@@ -62,7 +62,7 @@ namespace date
 
         for (std::size_t i = 0; digits == 0 || i < digits; ++i, ++iterator)
         {
-            if (digits == 0 && (iterator == end || !isNumber(*iterator)))
+            if (digits == 0 && (iterator == end || !isDigit(*iterator)))
                 break;
 
             result = result * R(10U) + (iterator != end ?
