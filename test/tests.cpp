@@ -130,3 +130,17 @@ TEST_CASE("UTC time zone", "[parsing]")
     REQUIRE(result.second == 12);
     REQUIRE(result.timeZone == 0);
 }
+
+TEST_CASE("Second fraction", "[parsing]")
+{
+    const std::string s = "20230202T101112.1234Z";
+    const auto result = date::parse(s);
+    REQUIRE(result.year == 2023);
+    REQUIRE(result.month == 2);
+    REQUIRE(result.day == 2);
+    REQUIRE(result.hour == 10);
+    REQUIRE(result.minute == 11);
+    REQUIRE(result.second == 12);
+    REQUIRE(result.secondFraction == 1234);
+    REQUIRE(result.timeZone == 0);
+}

@@ -137,7 +137,16 @@ namespace date
             
             if (secondIterator != end)
             {
-                if (*secondIterator == 'Z')
+                auto iterator = secondIterator;
+
+                if (*iterator == '.')
+                {
+                    const auto [secondFractionIterator, secondFraction] = parseNumber<std::uint32_t>(iterator + 1, end);
+                    result.secondFraction = secondFraction;
+                    iterator = secondFractionIterator;
+                }
+
+                if (*iterator == 'Z')
                     result.timeZone = 0;
                 else
                     throw ParseError{"Invalid timezone"};
