@@ -2,6 +2,7 @@
 #define DATE_HPP
 
 #include <cstring>
+#include <limits>
 #include <stdexcept>
 #include <string>
 
@@ -75,7 +76,7 @@ namespace date
             if (iterator == end)
                 throw ParseError{"Invalid number"};
 
-            if (R(result * R(10U)) / R(10U) != result)
+            if (result > std::numeric_limits<R>::max() / R(10U))
                 throw ParseError{"Number too large"};
 
             result *= R(10U);
