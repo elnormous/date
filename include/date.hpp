@@ -72,9 +72,20 @@ namespace date
             if (digits == 0 && (iterator == end || !isDigit(static_cast<char>(*iterator))))
                 break;
 
-            result = result * R(10U) + (iterator != end ?
-                                        charToNumber<R>(static_cast<char>(*iterator)) :
-                                        throw ParseError{"Invalid number"});
+            if (iterator == end)
+                throw ParseError{"Invalid number"};
+
+            if (R(result * R(10U)) / R(10U) != result)
+                throw ParseError{"Number too large"};
+
+            result *= R(10U);
+
+            const auto number = charToNumber<R>(static_cast<char>(*iterator));
+
+            if (~number < result && R(result + number) < number)
+                throw ParseError{"Number too large"};
+
+            result += number;
         }
 
         return {iterator, result};

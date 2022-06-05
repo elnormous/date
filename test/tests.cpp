@@ -88,6 +88,18 @@ TEST_CASE("Parse number with unknown digits", "[parsing]")
     REQUIRE(result == 123);
 }
 
+TEST_CASE("Parse too large number because of addition", "[parsing]")
+{
+    const std::string s = "257";
+    REQUIRE_THROWS_AS(date::parseNumber<std::uint8_t>(s.begin(), s.end()), date::ParseError);
+}
+
+TEST_CASE("Parse too large number because of multiplication", "[parsing]")
+{
+    const std::string s = "260";
+    REQUIRE_THROWS_AS(date::parseNumber<std::uint8_t>(s.begin(), s.end()), date::ParseError);
+}
+
 TEST_CASE("Parse time with separators", "[parsing]")
 {
     const std::string s = "2023-02-02T10:11:12";
