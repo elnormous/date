@@ -21,14 +21,24 @@ namespace date
     using Minute = std::uint8_t;
     using Second = std::uint8_t;
 
-    struct DateTime final
+    struct Date final
     {
         Year year;
         Month month;
         Day day;
+    };
+
+    struct Time final
+    {
         Hour hour = 0;
         Minute minute = 0;
         Second second = 0;
+    };
+
+    struct DateTime final
+    {
+        Date date;
+        Time time;
         std::uint32_t secondFraction = 0;
         std::uint32_t timeZone = 0;
     };
@@ -118,9 +128,9 @@ namespace date
             throw ParseError{"Invalid day"};
 
         DateTime result;
-        result.year = year;
-        result.month = month;
-        result.day = day;
+        result.date.year = year;
+        result.date.month = month;
+        result.date.day = day;
 
         if (dayIterator != end)
         {
@@ -143,9 +153,9 @@ namespace date
 
             const auto [secondIterator, second] = parseNumber<std::uint8_t>(minuteIterator + (separators ? 1 : 0), end, 2);
 
-            result.hour = hour;
-            result.minute = minute;
-            result.second = second;
+            result.time.hour = hour;
+            result.time.minute = minute;
+            result.time.second = second;
             
             if (secondIterator != end)
             {
