@@ -47,17 +47,17 @@ TEST_CASE("Days in month", "[parsing]")
 TEST_CASE("January 1, 2022", "[parsing]")
 {
     const auto result = date::parse("2022-01-01");
-    REQUIRE(result.year == 2022);
-    REQUIRE(result.month == 1);
-    REQUIRE(result.day == 1);
+    REQUIRE(result.date.year == 2022);
+    REQUIRE(result.date.month == 1);
+    REQUIRE(result.date.day == 1);
 }
 
 TEST_CASE("February 2, 2023", "[parsing]")
 {
     const auto result = date::parse("2023-02-02");
-    REQUIRE(result.year == 2023);
-    REQUIRE(result.month == 2);
-    REQUIRE(result.day == 2);
+    REQUIRE(result.date.year == 2023);
+    REQUIRE(result.date.month == 2);
+    REQUIRE(result.date.day == 2);
 }
 
 TEST_CASE("February 29 non-leap year", "[parsing]")
@@ -104,12 +104,12 @@ TEST_CASE("Parse time with separators", "[parsing]")
 {
     const std::string s = "2023-02-02T10:11:12";
     const auto result = date::parse(s);
-    REQUIRE(result.year == 2023);
-    REQUIRE(result.month == 2);
-    REQUIRE(result.day == 2);
-    REQUIRE(result.hour == 10);
-    REQUIRE(result.minute == 11);
-    REQUIRE(result.second == 12);
+    REQUIRE(result.date.year == 2023);
+    REQUIRE(result.date.month == 2);
+    REQUIRE(result.date.day == 2);
+    REQUIRE(result.time.hour == 10);
+    REQUIRE(result.time.minute == 11);
+    REQUIRE(result.time.second == 12);
 }
 
 TEST_CASE("Invalid month", "[parsing]")
@@ -122,24 +122,24 @@ TEST_CASE("Parse time without separators", "[parsing]")
 {
     const std::string s = "20230202T101112";
     const auto result = date::parse(s);
-    REQUIRE(result.year == 2023);
-    REQUIRE(result.month == 2);
-    REQUIRE(result.day == 2);
-    REQUIRE(result.hour == 10);
-    REQUIRE(result.minute == 11);
-    REQUIRE(result.second == 12);
+    REQUIRE(result.date.year == 2023);
+    REQUIRE(result.date.month == 2);
+    REQUIRE(result.date.day == 2);
+    REQUIRE(result.time.hour == 10);
+    REQUIRE(result.time.minute == 11);
+    REQUIRE(result.time.second == 12);
 }
 
 TEST_CASE("UTC time zone", "[parsing]")
 {
     const std::string s = "20230202T101112Z";
     const auto result = date::parse(s);
-    REQUIRE(result.year == 2023);
-    REQUIRE(result.month == 2);
-    REQUIRE(result.day == 2);
-    REQUIRE(result.hour == 10);
-    REQUIRE(result.minute == 11);
-    REQUIRE(result.second == 12);
+    REQUIRE(result.date.year == 2023);
+    REQUIRE(result.date.month == 2);
+    REQUIRE(result.date.day == 2);
+    REQUIRE(result.time.hour == 10);
+    REQUIRE(result.time.minute == 11);
+    REQUIRE(result.time.second == 12);
     REQUIRE(result.timeZone == 0);
 }
 
@@ -147,12 +147,12 @@ TEST_CASE("Second fraction", "[parsing]")
 {
     const std::string s = "20230202T101112.1234Z";
     const auto result = date::parse(s);
-    REQUIRE(result.year == 2023);
-    REQUIRE(result.month == 2);
-    REQUIRE(result.day == 2);
-    REQUIRE(result.hour == 10);
-    REQUIRE(result.minute == 11);
-    REQUIRE(result.second == 12);
+    REQUIRE(result.date.year == 2023);
+    REQUIRE(result.date.month == 2);
+    REQUIRE(result.date.day == 2);
+    REQUIRE(result.time.hour == 10);
+    REQUIRE(result.time.minute == 11);
+    REQUIRE(result.time.second == 12);
     REQUIRE(result.secondFraction == 1234);
     REQUIRE(result.timeZone == 0);
 }
