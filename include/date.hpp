@@ -21,7 +21,7 @@ namespace date
     using Minute = std::uint8_t;
     using Second = std::uint8_t;
 
-    struct Date final
+    struct DateTime final
     {
         Year year;
         Month month;
@@ -93,7 +93,7 @@ namespace date
     }
 
     template <class I>
-    inline Date parse(const I begin, const I end)
+    inline DateTime parse(const I begin, const I end)
     {
         const auto [yearIterator, year] = parseNumber<std::uint16_t>(begin, end, 4);
         if (yearIterator == end)
@@ -117,7 +117,7 @@ namespace date
         if (day < 1 || day > getDaysInMonth(month, year))
             throw ParseError{"Invalid day"};
 
-        Date result;
+        DateTime result;
         result.year = year;
         result.month = month;
         result.day = day;
@@ -169,13 +169,13 @@ namespace date
     }
 
     template <class T>
-    inline Date parse(const T& s)
+    inline DateTime parse(const T& s)
     {
         using std::begin, std::end;
         return parse(begin(s), end(s));
     }
 
-    inline Date parse(const char* s)
+    inline DateTime parse(const char* s)
     {
         return parse(s, s + std::strlen(s));
     }
